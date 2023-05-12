@@ -62,9 +62,10 @@ async function preparedTableOfContents(): Promise<string[]>{
       },
       {
         role: "user",
-        content: "Welche Daten hast du, gebe nur Nomen aus die deiner Meinung nach auch Keywords sind. " +
-          "Die Keywords werden in einer Autovervollständigung verwendet" +
-          "Generiere mindestens 100 Keywords" +
+        content: "Welche Daten hast du, gebe nur Infos aus die deiner Meinung nach auch Suchanfragen sind. " +
+          "Die Suchanfragen werden in einer Autovervollständigung verwendet" +
+          "Generiere mindestens 100 Sinnvolle Suchanfragen" +
+          "Gib ausschließlich die Keywords aus" +
           "Bitte gebe mir die Menge an Worten kommasepariert aus: ",
       },
     ],
@@ -75,11 +76,12 @@ async function preparedTableOfContents(): Promise<string[]>{
 
 console.log(await preparedTableOfContents())
 
+const rl = createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
 while(true){
-  const rl = createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
   const query = await rl.question("What is your question?");
 
   const adaModel = new OpenAIApi(getConfig("text-embedding-ada-002"));
@@ -144,7 +146,7 @@ while(true){
     ]
   });
 
-  console.log(newKeywords.data.choices[0].message?.content)
+  console.log(newKeywords.data.choices[0].message?.content.split(', '))
 }
 
 
